@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  <form id="form">
+    <p class="form__errors" style="display: none;">Please fill in all fields.</p>
+
+    <label for="name_input">Name</label><br>
+    <input type="text" id="name_input" name="name"><br>
+    <label for="message_input">Message</label><br>
+    <textarea type="textarea" id="message_input" name="message"></textarea>
+
+    <p class="form__success" style="display: none;">Sent successfully!</p>
+    <p class="form__sending" style="display: none;">Sending...</p>
+
+    <button type="submit" class="g-recaptcha form__button"
+      data-sitekey="YOUR_RECAPTCHA_PUBLIC_KEY"
+      data-callback="handleFormSubmit"
+      data-badge="inline">Submit</button>
+  </form>
+
+  <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+  <script>
+    var handleFormSubmit = function () {
+      var formApiEndpoint = 'YOUR_API_ENDPOINT'
+      var successEl = document.querySelector('.form__success')
+      var sendingEl = document.querySelector('.form__sending')
+      var errorsEl = document.querySelector('.form__errors')
+      var nameInput = document.querySelector('#name_input')
+      var messageInput = document.querySelector('#message_input')
+      var recaptchaResponse = document.querySelector('#form textarea[name=\'g-recaptcha-response\']')
+
+      successEl.style.display = 'none'
+      errorsEl.style.display = 'none'
+
+      if (nameInput.value == '' || messageInput == '') {
+        errorsEl.style.display = 'block'
+      } else {
+        var formRequest = new Request(formApiEndpoint, {
+          method: 'POST',
+          body: JSON.stringify({
+            name: nameInput.value,
+            message: messageInput.value,
+            'g-recaptcha-response': recaptchaResponse.value
+          })
+        })
+
+        fetch(formRequest)
+          .then(function(response) {
+            if (response.status === 200) {
+              return response.json()
+            } else {
+              throw new Error('Something went wrong on api server!')
+            }
+          })
+          .then(function(response) {
+            successEl.style.display = 'block'
+            sendingEl.style.display = 'none'
+          }).catch(function(error) {
+            errorsEl.style.display = 'block'
+            sendingEl.style.display = 'none'
+            console.error(error)
+          })
+      }
+    }
+
+    document.querySelector('.form__button').addEventListener('click', function() {
+      document.querySelector('.form__sending').style.display = 'block'
+    })
+  </script>
+</body>
+</html>
