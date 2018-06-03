@@ -106,7 +106,8 @@ Resources:
                 parent_id: ${StoryblokParentFolderId},
                 content: {
                   component: 'form_entry',
-                  name: inputData.name
+                  name: inputData.name,
+                  message: inputData.message
                 }
               }
             })
