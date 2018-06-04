@@ -28,6 +28,7 @@
       var successEl = document.querySelector('.form__success')
       var sendingEl = document.querySelector('.form__sending')
       var errorsEl = document.querySelector('.form__errors')
+      var buttonEl = document.querySelector('.form__button')
       var nameInput = document.querySelector('#name_input')
       var messageInput = document.querySelector('#message_input')
       var recaptchaResponse = document.querySelector('#form textarea[name=\'g-recaptcha-response\']')
@@ -37,6 +38,8 @@
 
       if (nameInput.value == '' || messageInput == '') {
         errorsEl.style.display = 'block'
+        buttonEl.style.display = 'block'
+        sendingEl.style.display = 'none'
       } else {
         var formRequest = new Request(formApiEndpoint, {
           method: 'POST',
@@ -57,9 +60,13 @@
           })
           .then(function(response) {
             successEl.style.display = 'block'
+            buttonEl.style.display = 'block'
             sendingEl.style.display = 'none'
+            nameInput.value = ''
+            messageInput.value = ''
           }).catch(function(error) {
             errorsEl.style.display = 'block'
+            buttonEl.style.display = 'block'
             sendingEl.style.display = 'none'
             console.error(error)
           })
@@ -68,6 +75,7 @@
 
     document.querySelector('.form__button').addEventListener('click', function() {
       document.querySelector('.form__sending').style.display = 'block'
+      document.querySelector('.form__button').style.display = 'none'
     })
   </script>
 </body>
