@@ -102,7 +102,6 @@ Resources:
             var postData = JSON.stringify({
               story: {
                 name: 'Contact entry - ' + timestamp,
-                slug: 'contact_' + timestamp,
                 parent_id: ${StoryblokParentFolderId},
                 content: {
                   component: 'form_entry',
@@ -193,6 +192,8 @@ Resources:
           }
 
           var sesApiRequest = function(inputData, success, error) {
+            AWS.config.update({region: 'us-east-1'})
+
             var ses = new AWS.SES()
 
             ses.sendEmail({
